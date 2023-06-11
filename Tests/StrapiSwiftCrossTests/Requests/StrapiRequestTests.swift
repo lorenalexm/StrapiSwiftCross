@@ -9,6 +9,7 @@ import XCTest
 @testable import StrapiSwiftCross
 
 final class StrapiRequestTests: XCTestCase {
+    // MARK: - Functions
     /// Tests creating a request with no filters
     func testRequestWithNoFilters() {
         let request = StrapiRequest(method: .get, contentType: "test")
