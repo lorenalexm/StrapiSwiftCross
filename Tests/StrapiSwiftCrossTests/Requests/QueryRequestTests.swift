@@ -9,6 +9,8 @@ import XCTest
 @testable import StrapiSwiftCross
 
 class QueryRequestTests: XCTestCase {
+    // MARK: - Functions
+    
     /// Tests creating a new QueryRequest.
     func testQueryRequest() {
         let request = QueryRequest(contentType: "testing")

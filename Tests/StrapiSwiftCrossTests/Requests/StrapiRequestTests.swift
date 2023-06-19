@@ -10,6 +10,7 @@ import XCTest
 
 final class StrapiRequestTests: XCTestCase {
     // MARK: - Functions
+    
     /// Tests creating a request with no filters
     func testRequestWithNoFilters() {
         let request = StrapiRequest(method: .get, contentType: "test")
