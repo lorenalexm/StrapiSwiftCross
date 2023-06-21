@@ -28,7 +28,7 @@ final public class Strapi {
     /// - Parameters:
     ///   - strapiRequest: The StrapiRequest to send to the server.
     ///   - token: An optional authenication token for the request.
-    /// - Returns: A string with the JSON data from the Strapi server.
+    /// - Returns: A string with the JSON data from the Strapi host.
     public func execute(_ strapiRequest: StrapiRequest, withAuthToken token: String? = nil) async throws -> String {
         let request = try buildURLRequest(from: strapiRequest, withAuthToken: token ?? "")
         let (data, response) = try await urlSession.data(for: request)
@@ -39,6 +39,13 @@ final public class Strapi {
         
         guard let raw = String(data: data, encoding: .utf8) else {
             throw StrapiError.parsingError
+        }
+        
+        do {
+            let decoded = try JSONDecoder().decode(StrapiResponse.self, from: data)
+            guard decoded.error == nil else {
+                throw StrapiError.serverResponse(code: decoded.error!.status, message: decoded.error!.message)
+            }
         }
         
         return raw
