@@ -6,6 +6,7 @@
 //
 
 import XCTest
+import Mocker
 @testable import StrapiSwiftCross
 
 final class StrapiTests: XCTestCase {
@@ -17,12 +18,72 @@ final class StrapiTests: XCTestCase {
     
     /// Sets properties before each test.
     override func setUp() {
-        strapi = Strapi(host: "http://localhost")
+        let configuration = URLSessionConfiguration.default
+        configuration.protocolClasses = [MockingURLProtocol.self]
+        let urlSession = URLSession(configuration: configuration)
+        
+        strapi = Strapi(host: "http://localhost", urlSession: urlSession)
     }
     
     /// Releases properties after each test.
     override func tearDown() {
         strapi = nil
+    }
+    
+    /// Tests executing a request and returning mocked data.
+    func testExecutingARequest() async throws {
+        let queryRequest = QueryRequest(contentType: "testing")
+        let url = URL(string: strapi!.buildURL(from: queryRequest))!
+        
+        let mock = Mock(url: url, dataType: .json, statusCode: 200, data: [
+            .get: MockedData.jsonWithoutErrors.data(using: .utf8)!
+        ])
+        mock.register()
+        
+        let result = try await strapi?.execute(queryRequest)
+        XCTAssertEqual(result, MockedData.jsonWithoutErrors)
+    }
+    
+    /// Tests executing a request that returns an error from the Strapi host.
+    func testExecutingAFailingRequest() async throws {
+        let queryRequest = QueryRequest(contentType: "testing")
+        let url = URL(string: strapi!.buildURL(from: queryRequest))!
+        
+        let mock = Mock(url: url, dataType: .json, statusCode: 200, data: [
+            .get: MockedData.jsonWithForbiddenError.data(using: .utf8)!
+        ])
+        mock.register()
+        
+        var didFailWithError: Error?
+        do {
+            let _ = try await strapi?.execute(queryRequest)
+        } catch {
+            didFailWithError = error
+            XCTAssertEqual(error.localizedDescription, "The server returned an error 403 with the message: Forbidden")
+        }
+        XCTAssertNotNil(didFailWithError)
+    }
+    
+    /// Tests building a URLRequest for later use.
+    func testBuildingURLRequest() {
+        let queryRequest = QueryRequest(contentType: "testing")
+        let request = try? strapi?.buildURLRequest(from: queryRequest, withAuthToken: "")
+        XCTAssertEqual(request?.url?.absoluteString, "http://localhost/testing")
+        XCTAssertEqual(request?.httpMethod, "GET")
+        XCTAssertEqual(request?.value(forHTTPHeaderField: "Content-Type"), "application/json; charset=utf8")
+        XCTAssertEqual(request?.value(forHTTPHeaderField: "Accept"), "application/json")
+        XCTAssertEqual(request?.value(forHTTPHeaderField: "Authorization"), nil)
+    }
+    
+    /// Tests building a URLRequest with an authentication token for later use.
+    func testBuildingURLRequestWithToken() {
+        let queryRequest = QueryRequest(contentType: "testing")
+        let request = try? strapi?.buildURLRequest(from: queryRequest, withAuthToken: "1234-5678")
+        XCTAssertEqual(request?.url?.absoluteString, "http://localhost/testing")
+        XCTAssertEqual(request?.httpMethod, "GET")
+        XCTAssertEqual(request?.value(forHTTPHeaderField: "Content-Type"), "application/json; charset=utf8")
+        XCTAssertEqual(request?.value(forHTTPHeaderField: "Accept"), "application/json")
+        XCTAssertEqual(request?.value(forHTTPHeaderField: "Authorization"), "Bearer 1234-5678")
     }
     
     /// Tests building a basic URL from a request.
