@@ -11,13 +11,17 @@ final public class Strapi {
     // MARK: - Properties
     
     let host: String
+    let urlSession: URLSession
     
     // MARK: - Functions
     
-    /// Initializes the HTTPClient and sets the Strapi host.
-    /// - Parameter host: The full url string to the Strapi server.
-    public init(host: String) {
+    /// Initializes the URLSession and sets the Strapi host.
+    /// - Parameters:
+    ///   - host: The full url string to the Strapi server.
+    ///   - urlSession: If desired a custom URLSession, defaults to a shared session.
+    public init(host: String, urlSession: URLSession = URLSession.shared) {
         self.host = host
+        self.urlSession = urlSession
     }
     
     /// Sends a request to the Strapi host and returns the JSON as a string.
@@ -26,14 +30,36 @@ final public class Strapi {
     ///   - token: An optional authenication token for the request.
     /// - Returns: A string with the JSON data from the Strapi server.
     public func execute(_ strapiRequest: StrapiRequest, withAuthToken token: String? = nil) async throws -> String {
-        guard let url = URL(string: buildUrl(from: strapiRequest)) else {
+        let request = try buildURLRequest(from: strapiRequest, withAuthToken: token ?? "")
+        let (data, response) = try await urlSession.data(for: request)
+        let statusCode = (response as? HTTPURLResponse)?.statusCode
+        guard statusCode == 200 else {
+            throw StrapiError.badResponse(code: statusCode ?? 0)
+        }
+        
+        guard let raw = String(data: data, encoding: .utf8) else {
+            throw StrapiError.parsingError
+        }
+        
+        return raw
+    }
+    
+    /// Builds the URLRequest from a StrapiRequest to a given URL.
+    /// - Parameters:
+    ///   - url: Where the request is to be sent.
+    ///   - strapiRequest: The StrapiRequest to extract request data from.
+    ///   - token: An optional authentication token for the request.
+    /// - Returns: A fully formed URLRequest ready to be executed.
+    func buildURLRequest(from strapiRequest: StrapiRequest, withAuthToken token: String) throws -> URLRequest{
+        guard let url = URL(string: buildURL(from: strapiRequest)) else {
             throw StrapiError.invalidURL
         }
+        
         var request = URLRequest(url: url)
+        request.httpMethod = strapiRequest.method.rawValue
         request.addValue("application/json; charset=utf8", forHTTPHeaderField: "Content-Type")
         request.addValue("application/json", forHTTPHeaderField: "Accept")
-        
-        if let token {
+        if !token.isEmpty {
             request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         }
         
@@ -41,27 +67,13 @@ final public class Strapi {
             request.httpBody = body.data(using: .utf8)
         }
         
-        do {
-            let (data, response) = try await URLSession.shared.data(for: request)
-            let statusCode = (response as? HTTPURLResponse)?.statusCode
-            guard statusCode == 200 else {
-                throw StrapiError.badResponse(code: statusCode ?? 0)
-            }
-            
-            guard let raw = String(data: data, encoding: .utf8) else {
-                throw StrapiError.parsingError
-            }
-            
-            return raw
-        } catch {
-            throw StrapiError.unexpected(reason: error.localizedDescription)
-        }
+        return request
     }
     
     /// Builds the url from the host and request for execution
     /// - Parameter from: The request for which to build the URL.
     /// - Returns: A URL to be used within an execution.
-    func buildUrl(from request: StrapiRequest) -> String {
+    func buildURL(from request: StrapiRequest) -> String {
         var url = host
         url += (url.hasSuffix("/") == false) ? "/" : ""
         url += request.contentType
@@ -120,6 +132,5 @@ final public class Strapi {
             url.removeLast()
         }
         return url
-        //return URL(string: url)
     }
 }
