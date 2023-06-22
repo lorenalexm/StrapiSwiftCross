@@ -35,11 +35,24 @@ final public class Strapi {
     /// - Returns: A string with the JSON data from the Strapi host.
     public func execute(_ strapiRequest: StrapiRequest, withAuthToken token: String? = nil) async throws -> String {
         let request = try buildURLRequest(from: strapiRequest, withAuthToken: token ?? "")
-        let (data, response) = try await urlSession.data(for: request)
-        let statusCode = (response as? HTTPURLResponse)?.statusCode
-        guard statusCode == 200 else {
-            throw StrapiError.badResponse(code: statusCode ?? 0)
-        }
+        
+        #if canImport(FoundationNetworking)
+            let data = await withCheckedContinuation { continuation in
+                urlSession.shared.dataTask(with: request) { data, response, _ in
+                    guard let data = data else {
+                        let statusCode = (response as? HTTPURLResponse)?.statusCode
+                        throw StrapiError.badResponse(code: statusCode)
+                    }
+                    continuation.resume(returning: data)
+                }.resume()
+            }
+        #else
+            let (data, response) = try await urlSession.data(for: request)
+            let statusCode = (response as? HTTPURLResponse)?.statusCode
+            guard statusCode == 200 else {
+                throw StrapiError.badResponse(code: statusCode ?? 0)
+            }
+        #endif
         
         guard let raw = String(data: data, encoding: .utf8) else {
             throw StrapiError.parsingError
