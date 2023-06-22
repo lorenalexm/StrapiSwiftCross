@@ -37,11 +37,12 @@ final public class Strapi {
         let request = try buildURLRequest(from: strapiRequest, withAuthToken: token ?? "")
         
         #if canImport(FoundationNetworking)
-            let data = await withCheckedContinuation { continuation in
-                urlSession.shared.dataTask(with: request) { data, response, _ in
+            let data: Data = try await withCheckedThrowingContinuation { continuation in
+                urlSession.dataTask(with: request) { data, response, _ in
                     guard let data = data else {
                         let statusCode = (response as? HTTPURLResponse)?.statusCode
-                        throw StrapiError.badResponse(code: statusCode)
+                        continuation.resume(throwing: StrapiError.badResponse(code: statusCode!))
+                        return
                     }
                     continuation.resume(returning: data)
                 }.resume()

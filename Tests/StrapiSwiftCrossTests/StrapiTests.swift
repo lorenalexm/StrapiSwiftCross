@@ -5,6 +5,10 @@
 //  Created by Alex Loren on 6/10/23.
 //
 
+#if canImport(FoundationNetworking)
+    import FoundationNetworking
+#endif
+
 import XCTest
 import Mocker
 @testable import StrapiSwiftCross
