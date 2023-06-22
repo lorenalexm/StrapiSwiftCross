@@ -64,6 +64,24 @@ final class StrapiTests: XCTestCase {
         XCTAssertNotNil(didFailWithError)
     }
     
+    /// Tests executing a request that returns a decoded object.
+    func testExecutingAndDecodingARequest() async throws {
+        let queryRequest = QueryRequest(contentType: "testing")
+        let url = URL(string: strapi!.buildURL(from: queryRequest))!
+        
+        let mock = Mock(url: url, dataType: .json, statusCode: 200, data: [
+            .get: MockedData.jsonWithoutErrors.data(using: .utf8)!
+        ])
+        mock.register()
+        
+        do {
+            let title: QueryTestResponse = try await strapi!.executeAndDecode(queryRequest)
+            XCTAssertEqual(title.data.count, 1)
+            XCTAssertEqual(title.data[0].id, 1)
+            XCTAssertEqual(title.data[0].title, "Surprising Title")
+        }
+    }
+    
     /// Tests building a URLRequest for later use.
     func testBuildingURLRequest() {
         let queryRequest = QueryRequest(contentType: "testing")

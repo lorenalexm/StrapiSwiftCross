@@ -51,6 +51,16 @@ final public class Strapi {
         return raw
     }
     
+    /// Sends a request to the Strapi host and returns a decoded object.
+    /// - Parameters:
+    ///   - strapiRequest: The StrapiRequest to send to the server.
+    ///   - token: An optional authentication token for the request.
+    /// - Returns: An object of type T from the Strapi host.
+    public func executeAndDecode<T: Codable>(_ strapiRequest: StrapiRequest, withAuthToken token: String? = nil) async throws -> T {
+        let json = try await execute(strapiRequest, withAuthToken: token)
+        return try JSONDecoder().decode(T.self, from: json.data(using: .utf8)!)
+    }
+    
     /// Builds the URLRequest from a StrapiRequest to a given URL.
     /// - Parameters:
     ///   - url: Where the request is to be sent.
