@@ -68,6 +68,7 @@ final class StrapiRequestTests: XCTestCase {
         XCTAssertEqual(request.path, "")
         
         request.addFilter(type: .equalTo, onField: "test", forValue: "testing")
+        XCTAssertEqual(request.canSendFilters, false)
         XCTAssertEqual(request.filters!.count, 0)
     }
     
@@ -83,6 +84,7 @@ final class StrapiRequestTests: XCTestCase {
         """
         
         request.setBody(to: body)
+        XCTAssertEqual(request.canSendBody, false)
         XCTAssertNil(request.body)
     }
     
@@ -114,6 +116,22 @@ final class StrapiRequestTests: XCTestCase {
         
         request.setBody(to: body)
         XCTAssertEqual(request.body, body)
+    }
+    
+    /// Tests adding filters to a request then clearing them.
+    func testClearingFiltersFromRequest() {
+        let request = StrapiRequest(method: .get, contentType: "test")
+        XCTAssertEqual(request.method, .get)
+        XCTAssertEqual(request.contentType, "test")
+        XCTAssertEqual(request.path, "")
+        
+        request.addFilter(type: .equalTo, onField: "test", forValue: "testing")
+        request.addFilter(type: .notIncludedIn, onField: "array", forValue: "others")
+        request.addFilter(type: .greaterThan, onField: "number", forValue: "4")
+        XCTAssertEqual(request.filters!.count, 3)
+        
+        request.removeAllFilters()
+        XCTAssertEqual(request.filters!.count, 0)
     }
     
     /// Tests creating a request with relations populated.
