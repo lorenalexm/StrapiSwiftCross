@@ -10,10 +10,10 @@ import Foundation
 struct StrapiResponse: Codable {
     // MARK: - Properties
     
-    let error: ResponseError?
+    let error: StrapiResponseError?
 }
 
-struct ResponseError: Codable {
+struct StrapiResponseError: Codable {
     // MARK: - Properties
     
     let status: Int
