@@ -7,8 +7,10 @@
 
 import Foundation
 
+/// The base class for all request types to a Strapi host. While able to be used directly, this is should be subclassed for a specific request type.
 public class StrapiRequest {
     // MARK: - Properties
+    
     let method: RequestMethod
     let contentType: String
     let path: String
@@ -34,7 +36,7 @@ public class StrapiRequest {
     
     /// Initializes a request and sets the parameters for future execution.
     /// - Parameters:
-    ///   - method: The RequestMethod to be used for this request.
+    ///   - method: The ``RequestMethod`` to be used for this request.
     ///   - contentType: The Strapi content-type string.
     ///   - path: The path on the server this request will be sent to.
     ///   - filters: Any content specific filters to be sent with the request.

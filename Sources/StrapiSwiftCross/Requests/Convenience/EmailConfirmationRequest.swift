@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Request for beginning or restarting the email confirmation of a user on the Strapi host.
 public final class EmailConfirmationRequest: StrapiRequest {
     // MARK: - Functions
     

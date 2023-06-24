@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Request for updating a specific resource on a Strapi host.
 public final class UpdateRequest: StrapiRequest {
     // MARK: - Functions
     

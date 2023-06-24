@@ -5,6 +5,7 @@
 //  Created by Alex Loren on 6/10/23.
 //
 
+/// The available types of filters that can be used with a ``StrapiRequest``, reflecting the Strapi hosts filter capabilities.
 public enum FilterType: String {
     case includedIn = "$in"
     case notIncludedIn = "$notIn"

@@ -11,6 +11,15 @@ import Foundation
     import FoundationNetworking
 #endif
 
+/// The base class used for interacting with a Strapi host.
+/// After creating a ``StrapiRequest`` object, this provides the functions for executing that request.
+///
+/// An example of this usage:
+/// ~~~
+/// let strapi = Strapi(host: "http://localhost:1337/api")
+/// let request = QueryRequest("posts")
+/// let result = try? await strapi.execute(request)
+/// ~~~
 final public class Strapi {
     // MARK: - Properties
     
@@ -19,7 +28,7 @@ final public class Strapi {
     
     // MARK: - Functions
     
-    /// Initializes the URLSession and sets the Strapi host.
+    /// Initializes the ``URLSession`` and sets the Strapi host.
     /// - Parameters:
     ///   - host: The full url string to the Strapi server.
     ///   - urlSession: If desired a custom URLSession, defaults to a shared session.
@@ -28,10 +37,13 @@ final public class Strapi {
         self.urlSession = urlSession
     }
     
-    /// Sends a request to the Strapi host and returns the JSON as a string.
+    /// Sends a ``StrapiRequest`` to the Strapi host and returns the JSON as a string.
     /// - Parameters:
-    ///   - strapiRequest: The StrapiRequest to send to the server.
+    ///   - strapiRequest: The ``StrapiRequest`` to send to the server.
     ///   - token: An optional authenication token for the request.
+    /// - Throws: `StrapiError.badResponse` if any status code other than 200 is received.
+    /// - Throws: `StrapiError.parsingError` if unable to convert from `Data` to `String`.
+    /// - Throws: `StrapiError.serverResponse` if the Strapi host returns an error in the JSON body.
     /// - Returns: A string with the JSON data from the Strapi host.
     public func execute(_ strapiRequest: StrapiRequest, withAuthToken token: String? = nil) async throws -> String {
         let request = try buildURLRequest(from: strapiRequest, withAuthToken: token ?? "")
@@ -70,20 +82,23 @@ final public class Strapi {
     }
     
     /// Sends a request to the Strapi host and returns a decoded object.
+    /// Uses the `execute` function and decodes the results of that call.
     /// - Parameters:
-    ///   - strapiRequest: The StrapiRequest to send to the server.
+    ///   - strapiRequest: The ``StrapiRequest`` to send to the server.
     ///   - token: An optional authentication token for the request.
+    /// - Throws: Any ``StrapiError`` that was thrown by the `execute` function.
     /// - Returns: An object of type T from the Strapi host.
     public func executeAndDecode<T: Codable>(_ strapiRequest: StrapiRequest, withAuthToken token: String? = nil) async throws -> T {
         let json = try await execute(strapiRequest, withAuthToken: token)
         return try JSONDecoder().decode(T.self, from: json.data(using: .utf8)!)
     }
     
-    /// Builds the URLRequest from a StrapiRequest to a given URL.
+    /// Builds the URLRequest from a ``StrapiRequest`` to a given URL.
     /// - Parameters:
     ///   - url: Where the request is to be sent.
-    ///   - strapiRequest: The StrapiRequest to extract request data from.
+    ///   - strapiRequest: The ``StrapiRequest`` to extract request data from.
     ///   - token: An optional authentication token for the request.
+    /// - Throws: `StrapiError.invalidURL` if unable to create a `URL` object from the ``StrapiRequest``.
     /// - Returns: A fully formed URLRequest ready to be executed.
     func buildURLRequest(from strapiRequest: StrapiRequest, withAuthToken token: String) throws -> URLRequest{
         guard let url = URL(string: buildURL(from: strapiRequest)) else {

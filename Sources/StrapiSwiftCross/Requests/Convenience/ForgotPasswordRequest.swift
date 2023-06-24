@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Request for informing the Strapi host that a user has forgotten their password. Does not actually reset the password.
 public final class ForgotPasswordRequest: StrapiRequest {
     // MARK: - Functions
     

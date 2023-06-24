@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Request for retrieving an array of a specific content-type from a Strapi host.
 public final class QueryRequest: StrapiRequest {
     // MARK: - Functions
     

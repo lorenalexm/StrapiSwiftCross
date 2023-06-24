@@ -7,7 +7,7 @@
 
 import Foundation
 
-/// Error type used when making requests or receiving data from a Strapi server.
+/// Error type used when making requests or receiving data from a Strapi host.
 public enum StrapiError: Error {
     case invalidURL
     case parsingError
@@ -16,7 +16,10 @@ public enum StrapiError: Error {
     case unexpected(reason: String)
 }
 
+/// Provides human readable descriptions of a ``StrapiError``.
 extension StrapiError: LocalizedError {
+    // MARK: - Properties
+    
     public var errorDescription: String? {
         get {
             switch self {
