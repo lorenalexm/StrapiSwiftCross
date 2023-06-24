@@ -28,7 +28,7 @@ final public class Strapi {
     
     // MARK: - Functions
     
-    /// Initializes the ``URLSession`` and sets the Strapi host.
+    /// Initializes the `URLSession` and sets the Strapi host.
     /// - Parameters:
     ///   - host: The full url string to the Strapi server.
     ///   - urlSession: If desired a custom URLSession, defaults to a shared session.
