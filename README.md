@@ -3,7 +3,7 @@
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/lorenalexm/StrapiSwiftCross)
 ![Swift Version 5.8](https://badgen.net/static/Swift/5.8/orange)
 ![GitHub](https://img.shields.io/github/license/lorenalexm/StrapiSwiftCross)
-<a href="https://www.buymeacoffee.com/roniemartinez" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="21" width="87"></a>
+[![Buy Me A Coffee](https://img.shields.io/badge/-buy_me_a%C2%A0coffee-gray?logo=buy-me-a-coffee)](https://www.buymeacoffee.com/lorenalexm)
 
 
 # StrapiSwiftCross
