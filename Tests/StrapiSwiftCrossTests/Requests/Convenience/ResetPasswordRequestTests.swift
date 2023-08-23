@@ -14,7 +14,7 @@ public class ResetPasswordRequestTests: XCTestCase {
     /// Requests creating a new ResetPasswordRequest.
     func testResetPasswordRequest() {
         let body = """
-            { "code": 1234, "password": password, "passwordConfirmation": password }
+            { "code": "1234", "password": "password", "passwordConfirmation": "password" }
         """
         
         let request = ResetPasswordRequest(code: "1234", password: "password", passwordConfirmation: "password")

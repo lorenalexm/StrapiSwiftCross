@@ -14,7 +14,7 @@ class EmailConfirmationRequestTests: XCTestCase {
     /// Tests creating a new EmailConfirmationRequest.
     func testEmailConfirmationRequest() {
         let body = """
-            { "email": test@email.com }
+            { "email": "test@email.com" }
         """
         
         let request = EmailConfirmationRequest(email: "test@email.com")

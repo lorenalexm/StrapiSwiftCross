@@ -18,7 +18,7 @@ public final class RegisterRequest: StrapiRequest {
     ///   - password: The password for the account to be created.
     public init(username: String, email: String, password: String) {
         let body = """
-            { "username": \(username), "email": \(email), "password": \(password) }
+            { "username": "\(username)", "email": "\(email)", "password": "\(password)" }
         """
         
         super.init(method: .post, contentType: "auth", path: "/local/register")

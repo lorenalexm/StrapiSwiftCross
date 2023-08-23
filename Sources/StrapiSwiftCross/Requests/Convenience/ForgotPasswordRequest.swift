@@ -17,7 +17,7 @@ public final class ForgotPasswordRequest: StrapiRequest {
     ///   - password: The password for the user.
     public init(email: String) {
         let body = """
-            { "email": \(email) }
+            { "email": "\(email)" }
         """
         
         super.init(method: .post, contentType: "auth", path: "/forgot-password")

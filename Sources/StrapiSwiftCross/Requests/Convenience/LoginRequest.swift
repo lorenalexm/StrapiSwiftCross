@@ -17,7 +17,7 @@ public final class LoginRequest: StrapiRequest {
     ///   - password: The password for the user.
     public init(identifier: String, password: String) {
         let body = """
-            { "identifier": \(identifier), "password": \(password) }
+            { "identifier": "\(identifier)", "password": "\(password)" }
         """
         
         super.init(method: .post, contentType: "auth", path: "/local")

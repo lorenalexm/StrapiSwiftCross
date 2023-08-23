@@ -14,7 +14,7 @@ class RegisterRequestTests: XCTestCase {
     /// Tests createing the RegisterRequest.
     func testRegisterRequest() {
         let body = """
-            { "username": username, "email": email@test.com, "password": password }
+            { "username": "username", "email": "email@test.com", "password": "password" }
         """
         
         let request = RegisterRequest(username: "username", email: "email@test.com", password: "password")

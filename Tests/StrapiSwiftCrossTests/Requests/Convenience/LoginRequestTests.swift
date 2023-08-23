@@ -14,7 +14,7 @@ class LoginRequestTests: XCTestCase {
     /// Tests creating the LoginRequest.
     func testLoginRequest() {
         let body = """
-            { "identifier": username, "password": password }
+            { "identifier": "username", "password": "password" }
         """
         
         let request = LoginRequest(identifier: "username", password: "password")

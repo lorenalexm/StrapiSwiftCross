@@ -18,7 +18,7 @@ public final class ResetPasswordRequest: StrapiRequest {
     ///   - passwordConfirmation: The confirmed new password for the user.
     public init(code: String, password: String, passwordConfirmation: String) {
         let body = """
-            { "code": \(code), "password": \(password), "passwordConfirmation": \(passwordConfirmation) }
+            { "code": "\(code)", "password": "\(password)", "passwordConfirmation": "\(passwordConfirmation)" }
         """
         
         super.init(method: .post, contentType: "auth", path: "/reset-password")

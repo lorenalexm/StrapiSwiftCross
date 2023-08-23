@@ -14,7 +14,7 @@ class ForgotPasswordRequestTests: XCTestCase {
     /// Tests creating the ForgotPasswordRequest.
     func testForgotPasswordReqeust() {
         let body = """
-            { "email": test@email.com }
+            { "email": "test@email.com" }
         """
         
         let request = ForgotPasswordRequest(email: "test@email.com")

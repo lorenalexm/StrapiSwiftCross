@@ -16,7 +16,7 @@ public final class EmailConfirmationRequest: StrapiRequest {
     ///   - email: The email associated with the user account
     public init(email: String) {
         let body = """
-            { "email": \(email) }
+            { "email": "\(email)" }
         """
         
         super.init(method: .post, contentType: "auth", path: "/send-email-confirmation")
