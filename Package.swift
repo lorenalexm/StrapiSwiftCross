@@ -19,8 +19,7 @@ let package = Package(
     ],
     targets: [
         .target(
-            name: "StrapiSwiftCross",
-            dependencies: []),
+            name: "StrapiSwiftCross"),
         .testTarget(
             name: "StrapiSwiftCrossTests",
             dependencies: [
