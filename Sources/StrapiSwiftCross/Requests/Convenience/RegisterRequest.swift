@@ -8,7 +8,7 @@
 import Foundation
 
 /// Request to register a new user with the Strapi host, using the hosts local authentication method.
-public final class RegisterRequest: StrapiRequest {
+public class RegisterRequest: StrapiRequest {
     // MARK: - Functions
     
     /// Attempts to register a new user with Strapi.

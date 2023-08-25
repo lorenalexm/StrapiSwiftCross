@@ -8,7 +8,7 @@
 import Foundation
 
 /// Request for creating a new resource of a specific content-type on the Strapi host.
-public final class CreateRequest: StrapiRequest {
+public class CreateRequest: StrapiRequest {
     // MARK: - Functions
     
     /// Creates the request and sets the body.

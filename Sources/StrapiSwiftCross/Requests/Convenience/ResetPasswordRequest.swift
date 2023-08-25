@@ -8,7 +8,7 @@
 import Foundation
 
 /// Request for changing a users password, using the Strapi hosts local authentication method.
-public final class ResetPasswordRequest: StrapiRequest {
+public class ResetPasswordRequest: StrapiRequest {
     // MARK: - Functions
     
     /// Attempts to finish the forgotten password flow by reseting the password with Strapi local authentication.

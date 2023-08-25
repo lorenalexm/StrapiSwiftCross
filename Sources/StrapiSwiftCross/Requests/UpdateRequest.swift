@@ -8,7 +8,7 @@
 import Foundation
 
 /// Request for updating a specific resource on a Strapi host.
-public final class UpdateRequest: StrapiRequest {
+public class UpdateRequest: StrapiRequest {
     // MARK: - Functions
     
     /// Creates the request and sets the body.

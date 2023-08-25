@@ -8,7 +8,7 @@
 import Foundation
 
 /// Request for logging in a user with the Strapi host, using the hosts local authentication method.
-public final class LoginRequest: StrapiRequest {
+public class LoginRequest: StrapiRequest {
     // MARK: - Functions
     
     /// Attempts to login the user with Strapi local authentication.

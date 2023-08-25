@@ -20,7 +20,7 @@ import Foundation
 /// let request = QueryRequest("posts")
 /// let result = try? await strapi.execute(request)
 /// ~~~
-final public class Strapi {
+public class Strapi {
     // MARK: - Properties
     
     let host: String

@@ -8,7 +8,7 @@
 import Foundation
 
 /// Request for retrieving a single specific resource from a Strapi host.
-public final class FetchRequest: StrapiRequest {
+public class FetchRequest: StrapiRequest {
     // MARK: - Functions
     
     /// Creates the fetch request for a specific resource.

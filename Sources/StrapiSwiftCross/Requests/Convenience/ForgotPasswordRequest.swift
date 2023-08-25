@@ -8,7 +8,7 @@
 import Foundation
 
 /// Request for informing the Strapi host that a user has forgotten their password. Does not actually reset the password.
-public final class ForgotPasswordRequest: StrapiRequest {
+public class ForgotPasswordRequest: StrapiRequest {
     // MARK: - Functions
     
     /// Attempts to initiate the forgotten password flow with Strapi local authentication.

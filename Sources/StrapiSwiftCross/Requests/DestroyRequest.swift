@@ -8,7 +8,7 @@
 import Foundation
 
 /// Request for destroying a single specific resource from a Strapi host.
-public final class DestroyRequest: StrapiRequest {
+public class DestroyRequest: StrapiRequest {
     // MARK: - Functions
     
     /// Creates the request.

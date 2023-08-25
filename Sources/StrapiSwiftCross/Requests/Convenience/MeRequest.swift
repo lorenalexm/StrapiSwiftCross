@@ -9,7 +9,7 @@ import Foundation
 
 /// Request for retrieving all of a users information, limited to the Users content-type.
 /// Capable of retrieving related content-types when used with `populate` function of the ``StrapiRequest``
-public final class MeRequest: StrapiRequest {
+public class MeRequest: StrapiRequest {
     // MARK: - Functions
     
     /// Attempts to fetch the Me content for the user.
